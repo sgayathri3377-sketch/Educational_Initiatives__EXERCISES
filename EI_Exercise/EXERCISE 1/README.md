@@ -1,81 +1,24 @@
-🚀 Exercise 1: Design Pattern Demos
+# 📁 EXERCISE 1: Design Patterns Showcase
 
-Located in the src/exercise1/patterns directory, this exercise provides six isolated, console-based simulations, each dedicated to demonstrating a single design pattern.
-Patterns Demonstrated
+This directory contains **Exercise 1**, which is designed to demonstrate the practical application of various Object-Oriented Programming (OOP) principles and **Design Patterns** across the three main categories: Creational, Structural, and Behavioral. The exercise includes six distinct use cases to showcase the benefits of each pattern.
 
-Category
-	
+## 🎯 Focus Areas
+* **OOP & SOLID Principles:** Applying fundamental OOP concepts (Encapsulation, Inheritance, Polymorphism) and the SOLID principles to ensure flexible and maintainable code.
+* **Design Patterns:** Implementing a diverse set of patterns to address common software design problems.
 
-Pattern
-	
+## ⚙️ Implemented Design Patterns & Use Cases
 
-Goal
-	
+| Pattern Category | Pattern | Space-Themed Use Case | Core Benefit |
+| :--- | :--- | :--- | :--- |
+| **Behavioral** | Observer Pattern | Space Weather Monitoring | Decouples the subject (weather) from its dependents (modules). |
+| **Behavioral** | Strategy Pattern | Spacecraft Propulsion | Allows an algorithm's behavior to be selected at runtime. |
+| **Creational** | Singleton Pattern | Mission Control Center | Guarantees a single instance of a critical class. |
+| **Creational** | Factory Pattern | Spacecraft Factory | Centralizes object creation without specifying the exact class. |
+| **Structural** | Adapter Pattern | Alien Communication | Enables communication between incompatible interfaces. |
+| **Structural** | Composite Pattern | Space Station Modules | Allows clients to treat individual objects and groups of objects uniformly. |
 
-Implementation File
+## 🚀 Getting Started
 
-Creational
-	
-
-Singleton
-	
-
-Ensures a single instance of a critical system (e.g., Mission Control) exists throughout the application.
-	
-
-SingletonSimulation.java
-
-Creational
-	
-
-Factory Method
-	
-
-Defines an interface for creating an object, but lets subclasses decide which class to instantiate (e.g., creating different types of Spacecraft).
-	
-
-FactorySimulation.java
-
-Structural
-	
-
-Composite
-	
-
-Allows clients to treat individual objects and groups of objects uniformly (e.g., handling status reports for individual modules and entire space station segments).
-	
-
-CompositeSimulation.java
-
-Behavioral
-	
-
-Strategy
-	
-
-Defines a family of algorithms, encapsulates each one, and makes them interchangeable (e.g., applying different propulsion methods to a rocket).
-	
-
-StrategySimulation.java
-
-Behavioral
-	
-
-Command
-	
-
-Encapsulates a request as an object, allowing parameterization of clients with different requests, queueing of requests, or logging (e.g., issuing commands like Launch or Fast-Forward).
-	
-
-CommandSimulation.java
-
-Behavioral
-	
-
-Observer
-	
-
-Defines a one-to-many dependency so that when one object changes state, all its dependents are notified (e.g., a Space Weather Station notifying individual Ship Modules of a solar flare).
-	
-
-ObserverSimulation.java
+1.  Navigate to the `EXERCISE 1` directory.
+2.  Compile the Java files.
+3.  Run the main class to see the demonstrations of all six design patterns in action.

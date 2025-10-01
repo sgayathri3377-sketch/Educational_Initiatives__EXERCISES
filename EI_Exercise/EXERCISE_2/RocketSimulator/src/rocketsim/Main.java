@@ -12,7 +12,6 @@ import rocketsim.util.Logger;
 
 /**
  * Main application class acting as the UserClient and CommandProcessor.
- * FINAL VERSION: With corrected welcome message formatting.
  */
 public class Main implements MissionStatusObserver {
     private final RocketLaunchSimulator simulator;

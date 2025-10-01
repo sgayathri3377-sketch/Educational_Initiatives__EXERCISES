@@ -1,6 +1,6 @@
 package rocketsim.core;
 
-import java.util.ArrayList; 
+import java.util.ArrayList;
 import java.util.List;
 import rocketsim.director.MissionDirector;
 import rocketsim.exception.ProfileLoadException;
@@ -9,14 +9,17 @@ import rocketsim.state.PreLaunch;
 import rocketsim.state.RocketState;
 import rocketsim.util.Logger;
 
-/**
- The Context class, managing the state and the main simulation loop.
- */
 public class RocketLaunchSimulator {
     private Rocket rocket;
     private RocketState currentState;
     private boolean checksComplete;
-    private String lastFailureReason = null; // <<-- ADDED
+
+    // Track last failure reason and if failure reported
+    private String lastFailureReason = null;
+    private boolean missionFailureReported = false;
+
+    // Track last status sent to avoid duplicate observer calls
+    private String lastStatusSent = "";
 
     private final List<MissionStatusObserver> observers = new ArrayList<>();
 
@@ -30,6 +33,8 @@ public class RocketLaunchSimulator {
 
         this.currentState = new PreLaunch();
         this.checksComplete = false;
+        this.missionFailureReported = false;
+        this.lastStatusSent = "";
         Logger.getInstance().log("INIT", "Simulator and LEO Rocket Model initialized via MissionDirector.");
     }
 
@@ -47,33 +52,28 @@ public class RocketLaunchSimulator {
     }
 
     public synchronized void advanceSimulation(int seconds) {
-        for (int i = 0; i < seconds && rocket.isMissionActive(); i++) {
-            currentState.executeLogic(this);
+        for (int i = 0; i < seconds; i++) {
+            if (!rocket.isMissionActive()) break;
 
-            if (seconds == 1 || (i == seconds - 1)) {
-                if (rocket.isMissionActive()) {
-                    notifyObservers();
-                }
-            }
-        }
-        // ENSURE: after loop, always notify if inactive
-        if (!rocket.isMissionActive()) {
+            currentState.executeLogic(this);
             notifyObservers();
         }
     }
 
     public void handleMissionFailure(String reason) {
-    lastFailureReason = reason;
-    notifyObservers();
-    rocket.setMissionActive(false);
-    Logger.getInstance().log("FAILURE", "MISSION FAILED: " + reason);
-    notifyObservers(String.format("!!! MISSION FAILED !!!\nReason: %s", reason));
-    notifyObservers();
-}
+        if (missionFailureReported) return;
 
+        missionFailureReported = true;
+        lastFailureReason = reason;
+        rocket.setMissionActive(false);
+
+        Logger.getInstance().log("FAILURE", "MISSION FAILED: " + reason);
+        // Do not notify observers here; advanceSimulation already calls it.
+    }
 
     public void setInactive() {
         if (!rocket.isMissionActive()) return;
+
         notifyObservers();
         rocket.setMissionActive(false);
         notifyObservers();
@@ -89,14 +89,20 @@ public class RocketLaunchSimulator {
 
     private void notifyObservers() {
         String status = getCurrentStatusString();
-        for (MissionStatusObserver observer : observers) {
-            observer.updateStatus(status);
+        if (!status.equals(lastStatusSent)) {
+            lastStatusSent = status;
+            for (MissionStatusObserver observer : observers) {
+                observer.updateStatus(status);
+            }
         }
     }
 
     private void notifyObservers(String finalMessage) {
-        for (MissionStatusObserver observer : observers) {
-            observer.updateStatus(finalMessage);
+        if (!finalMessage.equals(lastStatusSent)) {
+            lastStatusSent = finalMessage;
+            for (MissionStatusObserver observer : observers) {
+                observer.updateStatus(finalMessage);
+            }
         }
     }
 
@@ -104,30 +110,22 @@ public class RocketLaunchSimulator {
         if (!rocket.isMissionActive()) {
             boolean hasReachedAltitude = rocket.getAltitudeKm() >= rocket.getMaxAltitudeKm();
             boolean hasReachedSpeed = rocket.getSpeedKmh() >= rocket.getMaxOrbitalSpeedKmh();
+
             if (hasReachedAltitude && hasReachedSpeed) {
                 return "--- MISSION SUCCESSFUL ---";
-            } else {
-                String failureMsg = "--- MISSION FAILED ---";
-                if (lastFailureReason != null && !lastFailureReason.isEmpty()) {
-                    failureMsg += "\nReason: " + lastFailureReason;
-                }
-                return failureMsg;
             }
+            String failureMsg = "--- MISSION FAILED ---";
+            if (lastFailureReason != null && !lastFailureReason.isEmpty()) {
+                failureMsg += "\nReason: " + lastFailureReason;
+            }
+            return failureMsg;
         }
-
-        return String.format(
-            "Stage: %d, Fuel: %.1f%%, Altitude: %.1f km, Speed: %.0f km/h",
-            rocket.getCurrentStage(),
-            rocket.getFuelPercent(),
-            rocket.getAltitudeKm(),
-            rocket.getSpeedKmh()
-        );
+        return String.format("Stage: %d, Fuel: %.1f%%, Altitude: %.1f km, Speed: %.0f km/h",
+                rocket.getCurrentStage(), rocket.getFuelPercent(), rocket.getAltitudeKm(), rocket.getSpeedKmh());
     }
 
     public Rocket getRocket() { return rocket; }
-    public String getStageName() {
-        return currentState.getStageName();
-    }
+    public String getStageName() { return currentState.getStageName(); }
     public boolean isChecksComplete() { return checksComplete; }
     public void setChecksComplete(boolean checksComplete) { this.checksComplete = checksComplete; }
     public boolean isMissionActive() { return rocket.isMissionActive(); }

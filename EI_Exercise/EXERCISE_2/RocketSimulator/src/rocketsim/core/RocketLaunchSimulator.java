@@ -10,14 +10,14 @@ import rocketsim.state.RocketState;
 import rocketsim.util.Logger;
 
 /**
- * The Context class, managing the state and the main simulation loop.
- * FINAL VERSION: Corrected redundant logging.
+ The Context class, managing the state and the main simulation loop.
  */
 public class RocketLaunchSimulator {
     private Rocket rocket;
     private RocketState currentState;
     private boolean checksComplete;
-    
+    private String lastFailureReason = null; // <<-- ADDED
+
     private final List<MissionStatusObserver> observers = new ArrayList<>();
 
     public RocketLaunchSimulator() {
@@ -27,7 +27,7 @@ public class RocketLaunchSimulator {
         } catch (ProfileLoadException e) {
             throw new IllegalStateException("Failed to build rocket from profile: " + e.getMessage(), e);
         }
-        
+
         this.currentState = new PreLaunch();
         this.checksComplete = false;
         Logger.getInstance().log("INIT", "Simulator and LEO Rocket Model initialized via MissionDirector.");
@@ -50,33 +50,32 @@ public class RocketLaunchSimulator {
         for (int i = 0; i < seconds && rocket.isMissionActive(); i++) {
             currentState.executeLogic(this);
 
-            if (seconds == 1 || (i == seconds - 1)) { 
+            if (seconds == 1 || (i == seconds - 1)) {
                 if (rocket.isMissionActive()) {
                     notifyObservers();
                 }
             }
         }
+        // ENSURE: after loop, always notify if inactive
+        if (!rocket.isMissionActive()) {
+            notifyObservers();
+        }
     }
 
     public void handleMissionFailure(String reason) {
-        if (!rocket.isMissionActive()) return;
-        
-        notifyObservers(); 
-        
-        rocket.setMissionActive(false);
-        Logger.getInstance().log("FAILURE", "MISSION FAILED: " + reason);
-        notifyObservers(String.format("!!! MISSION FAILED !!!\nReason: %s", reason));
-        
-        notifyObservers();
-    }
-    
+    lastFailureReason = reason;
+    notifyObservers();
+    rocket.setMissionActive(false);
+    Logger.getInstance().log("FAILURE", "MISSION FAILED: " + reason);
+    notifyObservers(String.format("!!! MISSION FAILED !!!\nReason: %s", reason));
+    notifyObservers();
+}
+
+
     public void setInactive() {
         if (!rocket.isMissionActive()) return;
-
         notifyObservers();
-        
         rocket.setMissionActive(false);
-
         notifyObservers();
     }
 
@@ -84,13 +83,7 @@ public class RocketLaunchSimulator {
         observers.add(observer);
     }
 
-    /**
-     * This method is used by states to send one-off event messages to the console.
-     * CORRECTED: No longer creates a redundant log entry.
-     */
     public void postCustomMessage(String message) {
-        // The internal logic (e.g., in AscentStage1) is responsible for logging.
-        // This method's only job is to update the user view.
         notifyObservers(message);
     }
 
@@ -100,7 +93,7 @@ public class RocketLaunchSimulator {
             observer.updateStatus(status);
         }
     }
-    
+
     private void notifyObservers(String finalMessage) {
         for (MissionStatusObserver observer : observers) {
             observer.updateStatus(finalMessage);
@@ -111,10 +104,17 @@ public class RocketLaunchSimulator {
         if (!rocket.isMissionActive()) {
             boolean hasReachedAltitude = rocket.getAltitudeKm() >= rocket.getMaxAltitudeKm();
             boolean hasReachedSpeed = rocket.getSpeedKmh() >= rocket.getMaxOrbitalSpeedKmh();
-            
-            return String.format("--- MISSION %s ---", (hasReachedAltitude && hasReachedSpeed) ? "SUCCESSFUL" : "FAILED");
+            if (hasReachedAltitude && hasReachedSpeed) {
+                return "--- MISSION SUCCESSFUL ---";
+            } else {
+                String failureMsg = "--- MISSION FAILED ---";
+                if (lastFailureReason != null && !lastFailureReason.isEmpty()) {
+                    failureMsg += "\nReason: " + lastFailureReason;
+                }
+                return failureMsg;
+            }
         }
-        
+
         return String.format(
             "Stage: %d, Fuel: %.1f%%, Altitude: %.1f km, Speed: %.0f km/h",
             rocket.getCurrentStage(),
@@ -125,15 +125,13 @@ public class RocketLaunchSimulator {
     }
 
     public Rocket getRocket() { return rocket; }
-    
     public String getStageName() {
         return currentState.getStageName();
     }
-    
     public boolean isChecksComplete() { return checksComplete; }
     public void setChecksComplete(boolean checksComplete) { this.checksComplete = checksComplete; }
     public boolean isMissionActive() { return rocket.isMissionActive(); }
-    
+
     public interface MissionStatusObserver {
         void updateStatus(String status);
     }

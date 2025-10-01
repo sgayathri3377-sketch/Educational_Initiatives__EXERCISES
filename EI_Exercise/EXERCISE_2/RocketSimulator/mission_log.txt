@@ -1,0 +1,14 @@
+[2025-10-01 09:27:36.875] [INIT] Simulator and LEO Rocket Model initialized via MissionDirector.
+[2025-10-01 09:27:39.474] [COMMAND] start_checks received.
+[2025-10-01 09:27:39.475] [COMMAND] Initiating Pre-Launch Checks...
+[2025-10-01 09:27:41.236] [COMMAND] launch received.
+[2025-10-01 09:27:41.238] [STATUS] Launch initiated. Entering Stage 1.
+[2025-10-01 09:27:44.892] [COMMAND] start_checks received.
+[2025-10-01 09:27:49.669] [COMMAND] fast_forward 60 received.
+[2025-10-01 09:28:55.237] [COMMAND] fast_forward 60 received.
+[2025-10-01 09:28:55.245] [STAGE_SEP] Stage 1 complete. Separating stage. Entering Stage 2.
+[2025-10-01 09:29:01.648] [COMMAND] fast_forward 60 received.
+[2025-10-01 09:29:15.658] [COMMAND] fast_forward 60 received.
+[2025-10-01 09:29:18.310] [COMMAND] fast_forward 60 received.
+[2025-10-01 09:29:20.254] [COMMAND] fast_forward 60 received.
+[2025-10-01 09:29:20.270] [SUCCESS] Orbit achieved! Mission Successful.

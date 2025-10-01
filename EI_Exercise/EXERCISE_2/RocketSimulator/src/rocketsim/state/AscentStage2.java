@@ -26,7 +26,7 @@ public class AscentStage2 implements RocketState {
 
         checkFailure(simulator); // Fuel leak is non-fatal here, just increases burn rate
 
-        // Check for Mission Success
+        // Check for Mission SUCCESS
         boolean isSuccess = rocket.getAltitudeKm() >= rocket.getMaxAltitudeKm() &&
                             rocket.getSpeedKmh() >= rocket.getMaxOrbitalSpeedKmh();
 

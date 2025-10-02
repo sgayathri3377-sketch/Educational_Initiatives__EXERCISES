@@ -1,4 +1,4 @@
-# 🚀 Design Patterns: A Guide to Scalable Software
+# Design Patterns: A Guide to Scalable Software
 
 Design patterns are established, reusable solutions to recurring problems in system design. They are conceptual templates that guide developers in structuring software to be **scalable, maintainable, and efficient**.
 
@@ -12,7 +12,7 @@ They are typically divided into three categories: **Creational**, **Structural**
 
 ---
 
-## 🏗️ Structural Design Patterns
+## Structural Design Patterns
 
 Structural patterns define how objects and classes are organized. They focus on how different parts of a system can be combined to form larger, efficient, and easy-to-modify structures.
 
@@ -23,7 +23,7 @@ Structural patterns define how objects and classes are organized. They focus on 
 
 ---
 
-## ✨ Creational Design Patterns
+## Creational Design Patterns
 
 Creational patterns manage how objects are created. Their purpose is to encapsulate object creation logic and promote flexibility by controlling how objects are instantiated.
 
@@ -34,7 +34,7 @@ Creational patterns manage how objects are created. Their purpose is to encapsul
 
 ---
 
-## 🔄 Behavioral Design Patterns
+## Behavioral Design Patterns
 
 Behavioral patterns regulate how objects interact and communicate. They manage communication and responsibility among objects by defining clear interaction rules.
 
@@ -45,13 +45,13 @@ Behavioral patterns regulate how objects interact and communicate. They manage c
 
 
 
-# 🚀 Rocket Launch Simulator  
+# Rocket Launch Simulator  
 
 A simulation system that models rocket launches with multiple design patterns (Command, Facade, Observer, State, Strategy, Singleton). The system allows a user to set the orbit, perform checks, launch the rocket, and fast-forward the simulation.  
 
 ---
 
-## 📌 Features
+## Features
 - **Command Pattern** → Processes user commands cleanly (avoids nested `if-else`).  
 - **Facade Pattern** → User interacts with simple commands without knowing internal workings.  
 - **Observer Pattern** → Sends updates to UserClient and Logger.  
@@ -61,7 +61,7 @@ A simulation system that models rocket launches with multiple design patterns (C
 
 ---
 
-## 🖥️ User Client
+## User Client
 The entry point for the user.  
 - Accepts commands and interacts with the `CommandParser`.  
 - Executes parsed commands through the `RocketLaunchSimulator`.  
@@ -76,7 +76,7 @@ The entry point for the user.
 
 ---
 
-## ⚙️ Command Processing Flow
+## Command Processing Flow
 1. **UserClient** receives input.  
 2. **CommandParser** interprets input, validates it, and creates a `Command` object.  
 3. **UserClient** executes the command.  
@@ -87,7 +87,7 @@ The entry point for the user.
 
 ---
 
-## 🛰️ Orbit Levels
+## Orbit Levels
 ### Approach 1
 - `MISSION_PROFILES` contains all 3 orbit configurations.  
 - User selects `set_orbit_leo/meo/geo`.  
@@ -98,7 +98,7 @@ The entry point for the user.
 
 ---
 
-## 🏗️ Rocket Building
+##  Rocket Building
 ### Rocket Model
 - Initial values:  
   - Fuel = 100%  
@@ -125,7 +125,7 @@ The entry point for the user.
 
 ---
 
-## 🚀 Rocket Launch Simulator
+## Rocket Launch Simulator
 - Handles system state and rocket execution.  
 - **Start Checks**:  
   - 0.5% chance of system malfunction.  
@@ -137,7 +137,7 @@ The entry point for the user.
 
 ---
 
-## 🔄 State Management
+## State Management
 - **Pre-launch**  
 - **Stage 1**  
 - **Stage 2**  
@@ -154,14 +154,14 @@ The entry point for the user.
 
 ---
 
-## ⚠️ Failure Strategy (Strategy Pattern)
+## Failure Strategy (Strategy Pattern)
 - **Pre-Launch**: 0.5% chance of malfunction.  
 - **Stage 1**: 1% chance of engine flameout per second.  
 - **Stage 2**: 2% chance of fuel leak per second (increases burn rate).  
 
 ---
 
-## 📝 Logger (Singleton)
+## Logger (Singleton)
 - Stores all user commands + mission events with timestamps.  
 - Format:  
 
@@ -172,7 +172,7 @@ The entry point for the user.
 
 ---
 
-## 📡 Output Management
+## Output Management
 ### Approach 1  
 Use Observer Pattern for **both UserClient and Logger**.  
 
@@ -184,7 +184,7 @@ Use Observer Pattern for **UserClient** only. Logger integration can be added la
 
 ---
 
-## ⚡ Exception Handling
+## Exception Handling
 - **CommandParser**: Handles invalid syntax.  
 - **RocketLaunchSimulator**: Handles invalid command order (semantic errors).  
 - **Logger**: Handles file read/write errors.  
@@ -192,7 +192,7 @@ Use Observer Pattern for **UserClient** only. Logger integration can be added la
 
 ---
 
-## 📂 Design Patterns Summary
+## Design Patterns Summary
 - **Command Pattern** → User command handling.  
 - **Facade Pattern** → Simplified interface for the user.  
 - **Observer Pattern** → Output updates to clients.  
@@ -201,7 +201,7 @@ Use Observer Pattern for **UserClient** only. Logger integration can be added la
 
 ---
 
-## 📊 System Architecture
+## System Architecture
 
 ```mermaid
 flowchart TD

@@ -214,8 +214,11 @@ flowchart TD
   C -->|Updates| G[Logger]
   C -->|Notifies| H[UserClient Output]
 
+```
 
 
+CLASS DIAGRAM :
 
+<img width="1689" height="2702" alt="Image" src="https://github.com/user-attachments/assets/142d5d57-f66f-4665-8782-2d8daa30ff3d" />
 
 

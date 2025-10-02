@@ -82,8 +82,8 @@ The entry point for the user.
 3. **UserClient** executes the command.  
 4. **RocketLaunchSimulator** runs the necessary method.  
 
-✅ **Syntactic Errors** (typos like `lanch`, `startchecks`) → Handled by **CommandParser**.  
-✅ **Semantic Errors** (launch before checks, checks before setting orbit) → Handled by **RocketLaunchSimulator**.  
+- **Syntactic Errors** (typos like `lanch`, `startchecks`) → Handled by **CommandParser**.  
+- **Semantic Errors** (launch before checks, checks before setting orbit) → Handled by **RocketLaunchSimulator**.  
 
 ---
 
